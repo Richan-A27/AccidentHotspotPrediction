@@ -7,3 +7,4 @@ joblib
 requests
 faker
 beautifulsoup4
+pytest

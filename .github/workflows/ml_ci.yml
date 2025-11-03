@@ -1,0 +1,54 @@
+name: ML Directory CI/CD
+
+on:
+  push:
+    paths:
+      - "ml/**"
+  pull_request:
+    paths:
+      - "ml/**"
+
+jobs:
+  build-and-train:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          cd ml
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run preprocessing
+        run: |
+          cd ml/scripts
+          python preprocess_data.py
+
+      - name: Run clustering
+        run: |
+          cd ml/scripts
+          python cluster_zones.py
+
+      - name: Train ML model
+        run: |
+          cd ml/scripts
+          python train_model.py
+
+      - name: Run tests
+        run: |
+          cd ml
+          pytest -v --maxfail=1 --disable-warnings
+
+      - name: Upload trained models as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-ml-models
+          path: ml/models/
