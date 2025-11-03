@@ -1,0 +1,317 @@
+/* 🌈 Global body layout */
+body {
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(to bottom right, #007bff, #00c6ff);
+  font-family: "Inter", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 🧭 Container that centers the form */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* 🧩 Login box */
+.login-form {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+/* ✨ Smooth fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 🔤 Inputs */
+.login-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #f0f4ff;
+  font-size: 15px;
+}
+
+/* 🏷️ Title */
+.login-title {
+  color: #007bff;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+
+/* 🔘 Button */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 15px;
+}
+
+.login-button:hover {
+  background-color: #005fcc;
+}
+
+/* ⚠️ Error */
+.login-error {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+/* 🧭 Register link */
+.login-register {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.login-register a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-register a:hover {
+  text-decoration: underline;
+}
+
+/* 🖥 Desktop fix — ensure full width */
+@media (min-width: 768px) {
+  body {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .login-form {
+    max-width: 420px;
+  }
+}
+/* 🧭 Dashboard Layout */
+.user-dashboard {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+/* 🧩 Sidebar */
+.sidebar {
+  flex: 1;
+  max-width: 350px;
+  background: #fff;
+  padding: 25px;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.sidebar h2 {
+  color: #222;
+  margin-bottom: 5px;
+}
+
+.sidebar p {
+  color: #333;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* 🔘 Analyze Button */
+.analyze-btn {
+  background: #007bff;
+  color: white;
+  padding: 12px 28px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.analyze-btn:hover {
+  background: #005fcc;
+}
+
+/* 🔮 Prediction Box */
+.prediction-box {
+  color: white;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* 🧾 History */
+.history-box {
+  margin-top: 15px;
+}
+
+.history-box table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.history-box th {
+  background: #007bff;
+  color: white;
+  padding: 8px;
+}
+
+.history-box td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* 🗺️ Map */
+.map-area {
+  flex: 2.5;
+  height: 100%;
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 900px) {
+  .user-dashboard {
+    flex-direction: column;
+  }
+  .sidebar {
+    max-width: none;
+    box-shadow: none;
+    border-bottom: 2px solid #eee;
+  }
+}
+/* 🎯 Admin Dashboard Layout */
+.admin-dashboard {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background: #f8f9fa;
+  overflow: hidden;
+}
+
+/* 🧭 Sidebar */
+.admin-dashboard .sidebar {
+  flex: 1;
+  max-width: 320px;
+  background: #fff;
+  padding: 25px;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.admin-dashboard .sidebar h2 {
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.admin-dashboard .sidebar p {
+  font-size: 15px;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* 🧩 Summary box */
+.admin-summary {
+  background: #e9f2ff;
+  border-radius: 8px;
+  padding: 12px 15px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 🗂️ Main content */
+.admin-main {
+  flex: 3;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.admin-main h3 {
+  color: #222;
+  margin-bottom: 15px;
+}
+
+/* 📊 Table styles */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-table th {
+  background: #007bff;
+  color: white;
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 15px;
+}
+
+.admin-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #333;
+}
+
+.admin-table tr:hover {
+  background-color: #f7faff;
+  transition: 0.2s;
+}
+
+/* 📱 Responsive view */
+@media (max-width: 900px) {
+  .admin-dashboard {
+    flex-direction: column;
+  }
+
+  .admin-dashboard .sidebar {
+    max-width: none;
+    border-bottom: 2px solid #eee;
+    box-shadow: none;
+  }
+
+  .admin-main {
+    padding: 20px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    font-size: 13px;
+  }
+}
