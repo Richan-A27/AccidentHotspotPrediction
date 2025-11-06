@@ -13,16 +13,18 @@ const UserDashboard = () => {
 
   const username = localStorage.getItem("username");
 
-  // Load previous predictions (optional)
+  // ✅ Fetch user's prediction history
+  const fetchHistory = async () => {
+    try {
+      const res = await API.get("/predictions/user");
+      setHistory(res.data || []);
+    } catch (err) {
+      console.error("Error fetching history:", err);
+    }
+  };
+
+  // Load previous predictions on mount
   useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const res = await API.get("/admin/all");
-        setHistory(res.data.predictions || []);
-      } catch (err) {
-        console.error("Error fetching history:", err);
-      }
-    };
     fetchHistory();
   }, []);
 
@@ -52,6 +54,9 @@ const UserDashboard = () => {
           weather: res.data.weather,
           temperature: res.data.temperature.toFixed(1),
         });
+        
+        // ✅ Refresh history after successful prediction
+        await fetchHistory();
       }
     } catch (err) {
       console.error(err);

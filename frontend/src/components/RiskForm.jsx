@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../api";
 
 const RiskForm = ({ selectedLocation }) => {
   const [inputData, setInputData] = useState({
@@ -38,7 +38,7 @@ const RiskForm = ({ selectedLocation }) => {
 
       console.log("📤 Sending prediction request:", payload);
 
-      const res = await axios.post("http://localhost:5050/api/predict", payload);
+      const res = await API.post("/predict", payload);
 
       if (res.data.success) {
         setPrediction(res.data.prediction);
