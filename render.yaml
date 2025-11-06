@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: accident-backend
+    env: node
+    rootDirectory: backend
+    buildCommand: npm install && pip install -r requirements.txt
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        value: mongodb+srv://root:root@cluster.tr5mqrd.mongodb.net/
+      - key: JWT_SECRET
+        value: JS+W4GXmD7rXTEwQPJTagYurppnEp4zitC8utWF7EmQ=
+      # Add other env vars as needed
+  - type: web
+    name: accident-frontend
+    env: static
+    rootDirectory: frontend
+    buildCommand: npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://accident-backend.onrender.com
