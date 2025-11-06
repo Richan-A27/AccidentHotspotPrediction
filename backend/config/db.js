@@ -2,10 +2,8 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/accidentHotspotDB", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    const mongoURI = process.env.MONGO_URI || process.env.DATABASE_URL || "mongodb://localhost:27017/accidentHotspotDB";
+    await mongoose.connect(mongoURI);
     console.log("✅ MongoDB Connected");
   } catch (err) {
     console.error("❌ MongoDB Connection Error:", err);
