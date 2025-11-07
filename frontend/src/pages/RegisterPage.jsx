@@ -30,8 +30,10 @@ const RegisterPage = () => {
     }
 
     try {
+      console.log("📤 Sending register request");
       const res = await API.post("/auth/register", {
-        ...form,
+        username: form.username,
+        password: form.password,
         role: "user",
       });
 
@@ -40,8 +42,10 @@ const RegisterPage = () => {
         navigate("/");
       }
     } catch (err) {
-      console.error(err);
-      setError("Registration failed. Try another username.");
+      console.error("❌ Register error:", err);
+      // Show the actual error message from backend if available
+      const errorMessage = err.response?.data?.message || err.message || "Registration failed. Try another username.";
+      setError(errorMessage);
     }
   };
 

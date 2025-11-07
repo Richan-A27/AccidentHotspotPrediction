@@ -11,9 +11,17 @@ const router = express.Router();
 ================================ */
 router.post("/register", async (req, res) => {
   try {
+    console.log("📥 Register request received:", { 
+      body: req.body, 
+      hasUsername: !!req.body.username,
+      hasPassword: !!req.body.password,
+      hasRole: !!req.body.role
+    });
+    
     const { username, password, role } = req.body;
 
     if (!username || !password || !role) {
+      console.error("❌ Missing fields:", { username: !!username, password: !!password, role: !!role });
       return res.status(400).json({ message: "All fields are required." });
     }
 
@@ -47,7 +55,17 @@ router.post("/register", async (req, res) => {
 ================================ */
 router.post("/login", async (req, res) => {
   try {
+    console.log("📥 Login request received:", { 
+      hasUsername: !!req.body.username,
+      hasPassword: !!req.body.password,
+      bodyKeys: Object.keys(req.body)
+    });
+    
     const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({ message: "Username and password are required." });
+    }
 
     const user = await User.findOne({ username });
     if (!user) return res.status(404).json({ message: "User not found." });

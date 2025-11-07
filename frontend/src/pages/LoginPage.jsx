@@ -14,8 +14,20 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(""); // Clear previous errors
+    
+    // Validate form
+    if (!form.username || !form.password) {
+      setError("Please enter both username and password");
+      return;
+    }
+
     try {
-      const res = await API.post("/auth/login", form);
+      console.log("📤 Sending login request:", { username: form.username, password: "***" });
+      const res = await API.post("/auth/login", {
+        username: form.username,
+        password: form.password
+      });
 
       if (res.data.token) {
         localStorage.setItem("token", res.data.token);
@@ -26,8 +38,10 @@ const LoginPage = () => {
         else navigate("/user");
       }
     } catch (err) {
-      console.error(err);
-      setError("Invalid credentials. Please try again.");
+      console.error("❌ Login error:", err);
+      // Show the actual error message from backend if available
+      const errorMessage = err.response?.data?.message || err.message || "Invalid credentials. Please try again.";
+      setError(errorMessage);
     }
   };
 
