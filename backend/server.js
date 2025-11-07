@@ -28,7 +28,12 @@ app.use("/api/auth", authRoutes);
 app.use("/api/predict", predictRoute);
 app.use("/api/predictions", predictionHistory);
 app.use("/api/admin", adminRoute);
-app.use("/api/hotspots", hotspotRoute); 
+app.use("/api/hotspots", hotspotRoute);
+
+// Health check route
+app.get("/", (req, res) => {
+  res.json({ message: "Backend is running", status: "OK" });
+});
 
 // 🟢 Start the server
 const PORT = process.env.PORT || 5050;
