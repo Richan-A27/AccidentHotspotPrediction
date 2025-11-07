@@ -20,7 +20,14 @@ const app = express();
 connectDB();
 
 // 🧱 Middleware
-app.use(cors());
+// CORS configuration - allow frontend domain in production
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? process.env.FRONTEND_URL || '*' 
+    : ['http://localhost:5173', 'http://localhost:3000'],
+  credentials: true
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // 🚀 API Routes

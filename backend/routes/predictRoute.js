@@ -48,9 +48,9 @@ router.post("/", verifyToken, async (req, res) => {   // ✅ FIXED
     // 🌦 Fetch live weather data
     let weather, temp;
     try {
-      const weatherRes = await axios.get(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}&units=metric`
-      );
+    const weatherRes = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}&units=metric`
+    );
       weather = weatherRes.data.weather[0].main;
       temp = weatherRes.data.main.temp;
     } catch (weatherError) {
@@ -91,9 +91,17 @@ router.post("/", verifyToken, async (req, res) => {   // ✅ FIXED
       return res.status(500).json({ error: "Prediction script not found" });
     }
 
-    // ✅ Use venv Python to ensure correct scikit-learn version
+    // ✅ Use venv Python if available, otherwise use system python3
+    // In production (Render), use system python3 or python3.9
     const venvPythonPath = path.resolve(__dirname, "../../venv/bin/python3");
-    const pythonExecutable = fs.existsSync(venvPythonPath) ? venvPythonPath : "python3";
+    let pythonExecutable = "python3";
+    
+    if (fs.existsSync(venvPythonPath)) {
+      pythonExecutable = venvPythonPath;
+    } else if (process.env.NODE_ENV === 'production') {
+      // Try python3.9, python3, or python in production
+      pythonExecutable = "python3";
+    }
     
     console.log("🐍 Using Python:", pythonExecutable);
     const python = spawn(pythonExecutable, [scriptPath, JSON.stringify(inputData)]);
@@ -106,13 +114,13 @@ router.post("/", verifyToken, async (req, res) => {   // ✅ FIXED
 
     python.on("close", async (code) => {
       try {
-        if (code !== 0) {
-          console.error("❌ Python Error:", errOutput);
+      if (code !== 0) {
+        console.error("❌ Python Error:", errOutput);
           return res.status(500).json({ 
             success: false,
             error: errOutput || "Python script execution failed" 
           });
-        }
+      }
 
         const outputTrimmed = output.trim();
         if (!outputTrimmed || isNaN(parseFloat(outputTrimmed))) {
@@ -125,58 +133,60 @@ router.post("/", verifyToken, async (req, res) => {   // ✅ FIXED
 
         let risk_score = parseFloat(outputTrimmed);
 
-        // ⚡ Add variation + hotspot influence
-        const randomOffset = (Math.random() - 0.5) * 0.25;
-        const isHotspot =
-          latitude >= 13.05 && latitude <= 13.09 &&
-          longitude >= 80.24 && longitude <= 80.28;
+      // ⚡ Add variation + hotspot influence
+      const randomOffset = (Math.random() - 0.5) * 0.25;
+      const isHotspot =
+        latitude >= 13.05 && latitude <= 13.09 &&
+        longitude >= 80.24 && longitude <= 80.28;
 
-        if (isHotspot) risk_score += 0.2;
-        risk_score = Math.max(0, Math.min(1, risk_score + randomOffset));
+      if (isHotspot) risk_score += 0.2;
+      risk_score = Math.max(0, Math.min(1, risk_score + randomOffset));
 
-        const risk_level =
-          risk_score < 0.3 ? "Low" : risk_score < 0.6 ? "Moderate" : "High";
+      const risk_level =
+        risk_score < 0.3 ? "Low" : risk_score < 0.6 ? "Moderate" : "High";
 
-        // ✅ Log for debugging
-        console.log("🧠 Prediction Save Check:", {
-          userId,
-          risk_score,
-          risk_level,
-        });
+      // ✅ Log for debugging
+      console.log("🧠 Prediction Save Check:", {
+        userId,
+        risk_score,
+        risk_level,
+      });
 
-        // ✅ Save to MongoDB
-        const newPrediction = new Prediction({
+      // ✅ Save to MongoDB
+      const newPrediction = new Prediction({
           userId: userIdObjectId,
-          latitude,
-          longitude,
-          road_type,
-          vehicle_type,
-          weather,
-          temperature: temp,
-          light_condition,
-          num_vehicles_involved,
-          speed_limit,
-          traffic_density,
-          risk_score,
-          risk_level,
-        });
+        latitude,
+        longitude,
+        road_type,
+        vehicle_type,
+        weather,
+        temperature: temp,
+        light_condition,
+        num_vehicles_involved,
+        speed_limit,
+        traffic_density,
+        risk_score,
+        risk_level,
+      });
         
         const savedPrediction = await newPrediction.save();
         console.log("✅ Prediction saved successfully:", {
           id: savedPrediction._id,
           userId: savedPrediction.userId,
+          userIdType: typeof savedPrediction.userId,
+          userIdString: savedPrediction.userId.toString(),
           risk_score: savedPrediction.risk_score,
           createdAt: savedPrediction.createdAt,
         });
 
-        // ✅ Respond
-        res.json({
-          success: true,
-          prediction: risk_score,
-          risk_level,
-          weather,
-          temperature: temp,
-        });
+      // ✅ Respond
+      res.json({
+        success: true,
+        prediction: risk_score,
+        risk_level,
+        weather,
+        temperature: temp,
+      });
       } catch (saveError) {
         console.error("❌ Save Error:", saveError);
         // Still return prediction even if save fails

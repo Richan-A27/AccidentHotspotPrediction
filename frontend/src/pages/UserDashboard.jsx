@@ -16,10 +16,12 @@ const UserDashboard = () => {
   // ✅ Fetch user's prediction history
   const fetchHistory = async () => {
     try {
+      console.log("📥 Fetching prediction history...");
       const res = await API.get("/predictions/user");
+      console.log("✅ History received:", res.data?.length || 0, "items");
       setHistory(res.data || []);
     } catch (err) {
-      console.error("Error fetching history:", err);
+      console.error("❌ Error fetching history:", err);
     }
   };
 
@@ -55,8 +57,10 @@ const UserDashboard = () => {
           temperature: res.data.temperature.toFixed(1),
         });
         
-        // ✅ Refresh history after successful prediction
-        await fetchHistory();
+        // ✅ Refresh history after successful prediction (with small delay to ensure DB save completes)
+        setTimeout(async () => {
+          await fetchHistory();
+        }, 500);
       }
     } catch (err) {
       console.error(err);
